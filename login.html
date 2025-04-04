@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Login Page</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+    <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-8 w-full max-w-md border border-white border-opacity-20 shadow-2xl">
+        <div class="text-center mb-8">
+            <h2 class="text-3xl font-bold text-white mb-2">Login</h2>
+            <p class="text-white text-opacity-70">Please enter your credentials</p>
+        </div>
+        
+        <form id="loginForm">
+            <div class="mb-5">
+                <label class="block text-white text-sm font-medium mb-2" for="username">
+                    <i class="fas fa-user mr-2"></i> Username
+                </label>
+                <input class="w-full px-4 py-3 rounded-lg bg-white bg-opacity-20 text-white placeholder-white placeholder-opacity-50 focus:outline-none form-input" 
+                       type="text" 
+                       id="username" 
+                       placeholder="Enter your username"
+                       required>
+                <p class="text-red-400 text-xs mt-1 hidden" id="usernameError"></p>
+            </div>
+            
+            <div class="mb-5">
+                <label class="block text-white text-sm font-medium mb-2" for="password">
+                    <i class="fas fa-lock mr-2"></i> Password
+                </label>
+                <div class="relative">
+                    <input class="w-full px-4 py-3 rounded-lg bg-white bg-opacity-20 text-white placeholder-white placeholder-opacity-50 focus:outline-none form-input" 
+                           type="password" 
+                           id="password" 
+                           placeholder="Enter your password"
+                           required>
+                    <i class="fas fa-eye-slash absolute right-3 top-3.5 text-white text-opacity-50 cursor-pointer" id="togglePassword"></i>
+                </div>
+                <p class="text-red-400 text-xs mt-1 hidden" id="passwordError"></p>
+            </div>
+            
+            <div class="flex items-center justify-between mb-6">
+                <label class="flex items-center text-white text-sm cursor-pointer">
+                    <input type="checkbox" class="rounded bg-white bg-opacity-20 border-transparent focus:ring-orange-500 mr-2">
+                    Remember me
+                </label>
+                <a href="#" class="text-orange-400 text-sm hover:text-orange-300 transition">Forgot Password?</a>
+            </div>
+            
+            <button type="submit" class="w-full bg-orange-500 text-white py-3 rounded-lg font-semibold btn-login flex items-center justify-center">
+                <span id="loginText">Login</span>
+                <svg id="loginSpinner" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+            </button>
+            
+            <div class="relative my-6">
+                <div class="absolute inset-0 flex items-center">
+                    <div class="w-full border-t border-white border-opacity-20"></div>
+                </div>
+                <div class="relative flex justify-center text-sm">
+                    <span class="px-2 bg-transparent text-white text-opacity-70">Or continue with</span>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-3">
+                <button type="button" class="flex items-center justify-center py-2 px-4 rounded-lg bg-white bg-opacity-10 text-white social-btn">
+                    <i class="fab fa-google mr-2"></i> Google
+                </button>
+                <button type="button" class="flex items-center justify-center py-2 px-4 rounded-lg bg-white bg-opacity-10 text-white social-btn">
+                    <i class="fab fa-github mr-2"></i> GitHub
+                </button>
+            </div>
+        </form>
+        
+        <p class="text-center text-white text-opacity-70 text-sm mt-6">
+            Don't have an account? 
+            <a href="#" class="text-orange-400 font-medium hover:text-orange-300 transition">Register</a>
+        </p>
+    </div>
+
+    <script>
+        // Toggle password visibility
+        const togglePassword = document.getElementById('togglePassword');
+        const password = document.getElementById('password');
+        
+        togglePassword.addEventListener('click', function() {
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+
+        // Form validation
+        const loginForm = document.getElementById('loginForm');
+        const usernameError = document.getElementById('usernameError');
+        const passwordError = document.getElementById('passwordError');
+        const loginText = document.getElementById('loginText');
+        const loginSpinner = document.getElementById('loginSpinner');
+        
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Reset errors
+            usernameError.classList.add('hidden');
+            passwordError.classList.add('hidden');
+            
+            // Validate inputs
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            
+            let isValid = true;
+            
+            if (!username) {
+                usernameError.textContent = 'Username is required';
+                usernameError.classList.remove('hidden');
+                isValid = false;
+            }
+            
+            if (!password) {
+                passwordError.textContent = 'Password is required';
+                passwordError.classList.remove('hidden');
+                isValid = false;
+            } else if (password.length < 6) {
+                passwordError.textContent = 'Password must be at least 6 characters';
+                passwordError.classList.remove('hidden');
+                isValid = false;
+            }
+            
+            if (isValid) {
+                // Show loading state
+                loginText.textContent = 'Logging in...';
+                loginSpinner.classList.remove('hidden');
+                
+                // Simulate API call
+                setTimeout(() => {
+                    // Reset form
+                    loginForm.reset();
+                    loginText.textContent = 'Login';
+                    loginSpinner.classList.add('hidden');
+                    
+                    // Show success (in a real app, you would redirect)
+                    alert('Login successful!');
+                }, 1500);
+            }
+        });
+    </script>
+</body>
+</html>
